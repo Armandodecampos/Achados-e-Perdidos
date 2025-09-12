@@ -596,6 +596,37 @@
             itemToEdit = null;
             capturedImageFile = null;
         });
+        
+        // **NOVA FUNÇÃO**: Redimensiona e corta uma imagem para 200x200px
+        async function processImageForUpload(file) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const targetSize = 200;
+                    
+                    canvas.width = targetSize;
+                    canvas.height = targetSize;
+
+                    // Calcula o fator de escala para preencher a tela sem distorção
+                    const scale = Math.max(targetSize / img.width, targetSize / img.height);
+                    
+                    // Calcula a posição de corte para centralizar a imagem
+                    const x = (canvas.width / 2) - (img.width / 2) * scale;
+                    const y = (canvas.height / 2) - (img.height / 2) * scale;
+
+                    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+
+                    canvas.toBlob(blob => {
+                        const resizedFile = new File([blob], file.name, { type: file.type });
+                        resolve(resizedFile);
+                    }, 'image/png', 0.8); // Qualidade de 80%
+                };
+                img.onerror = reject;
+                img.src = URL.createObjectURL(file);
+            });
+        }
 
 
         // Lógica para lidar com o envio do formulário de item
@@ -619,14 +650,16 @@
             let filePath = null;
 
             if (file) {
-                 const fileName = `${Date.now()}-${file.name}`;
+                 // **NOVO**: Processa a imagem para redimensionar e cortar antes de fazer o upload
+                 const resizedFile = await processImageForUpload(file);
+                 const fileName = `${Date.now()}-${resizedFile.name}`;
                  filePath = `${currentSession.user.id}/${fileName}`;
 
                  try {
                      const { error: uploadError } = await supabase
                          .storage
                          .from('achados_fotos')
-                         .upload(filePath, file);
+                         .upload(filePath, resizedFile); // Usa o arquivo redimensionado
 
                      if (uploadError) {
                          console.error('Erro ao fazer upload da foto:', uploadError);
@@ -1142,9 +1175,21 @@
 
         takePhotoBtn.addEventListener('click', () => {
             const context = cameraCanvas.getContext('2d');
-            cameraCanvas.width = videoElement.videoWidth;
-            cameraCanvas.height = videoElement.videoHeight;
-            context.drawImage(videoElement, 0, 0, cameraCanvas.width, cameraCanvas.height);
+            const targetSize = 200;
+
+            // Calcula o fator de escala para preencher a tela sem distorção
+            const scale = Math.max(targetSize / videoElement.videoWidth, targetSize / videoElement.videoHeight);
+            
+            // Define as dimensões do canvas para 200x200px
+            cameraCanvas.width = targetSize;
+            cameraCanvas.height = targetSize;
+
+            // Calcula a posição de corte para centralizar a imagem
+            const x = (cameraCanvas.width / 2) - (videoElement.videoWidth / 2) * scale;
+            const y = (cameraCanvas.height / 2) - (videoElement.videoHeight / 2) * scale;
+            
+            // Desenha a imagem cortada e redimensionada no canvas
+            context.drawImage(videoElement, x, y, videoElement.videoWidth * scale, videoElement.videoHeight * scale);
             
             // Converte o canvas para um Blob e cria um "Arquivo" virtual
             cameraCanvas.toBlob(blob => {
