@@ -80,6 +80,38 @@
         ::-webkit-scrollbar-thumb:hover {
             background-color: #5d6776;
         }
+
+        /* Estilos customizados para o input de arquivo */
+        .custom-file-input::-webkit-file-upload-button {
+            visibility: hidden;
+        }
+        .custom-file-input::before {
+            content: 'Carregar arquivo';
+            display: inline-block;
+            background: #1e40af;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            outline: none;
+            white-space: nowrap;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: background-color 0.2s;
+        }
+        .custom-file-input:hover::before {
+            background-color: #1c3b9b;
+        }
+        .custom-file-input:active::before {
+            background-color: #1a368b;
+        }
+        .custom-file-input:disabled::before {
+            background-color: #4b5563;
+        }
+        .custom-file-input {
+            color: transparent;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-300 min-h-screen flex items-center justify-center p-4">
@@ -189,11 +221,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
                     </svg>
                 </button>
-                 <!-- Campo de data visível para o calendário -->
-                <input type="date" id="historico-filter-date" class="py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-gray-700 hover:bg-gray-600 transition duration-200">
-
-                <button id="historico-btn-filter-all" class="py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-gray-700 hover:bg-gray-600 transition duration-200">Todos</button>
-                
+                 
                 <!-- Barra de pesquisa movida para a barra superior -->
                 <div class="mt-2 sm:mt-0 w-full sm:w-auto flex-grow flex items-center relative">
                     <input type="text" id="historico-search-input" placeholder="Pesquisar..." class="w-full px-4 py-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200">
@@ -210,6 +238,7 @@
             <div id="historico-list" class="space-y-4">
                 <!-- Lista de itens devolvidos será renderizada aqui -->
             </div>
+             <p class="text-center text-sm text-gray-500 mt-4">Itens registrados há mais de 3 meses são excluídos permanentemente do sistema.</p>
         </div>
     </div>
 
@@ -220,15 +249,9 @@
             
              <button id="sign-out-liberacao" class="py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200">Sair</button>
             
-            <button id="btn-historico" class="py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-200 flex items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.03 21H7.97a2 2 0 01-1.99-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-            </button>
-            <!-- Campo de data visível para o calendário -->
-            <input type="date" id="filter-date" class="py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-gray-700 hover:bg-gray-600 transition duration-200">
-
-            <button id="btn-filter-all" class="py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-gray-700 hover:bg-gray-600 transition duration-200">Todos</button>
+            <button id="btn-historico" class="py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-200">Histórico</button>
+            
+            <button id="btn-add-item" class="py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-200">Adicionar</button>
             
             <!-- Barra de pesquisa movida para a barra superior -->
             <div class="mt-2 sm:mt-0 w-full sm:w-auto flex-grow flex items-center relative">
@@ -247,23 +270,37 @@
                 <h3 id="form-subtitle" class="text-lg font-bold text-gray-100">Adicionar Item</h3>
                 
                 <div>
-                    <label for="local_encontrado" class="block text-sm font-medium text-gray-300">Local Onde Foi Encontrado</label>
-                    <input type="text" id="local_encontrado" name="local_encontrado" required class="mt-1 block w-full px-4 py-2 bg-gray-600 text-gray-100 border border-gray-500 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200">
-                </div>
-                
-                <div>
                     <label for="descricao" class="block text-sm font-medium text-gray-300">Descrição do Objeto</label>
                     <textarea id="descricao" name="descricao" rows="3" required class="mt-1 block w-full px-4 py-2 bg-gray-600 text-gray-100 border border-gray-500 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200"></textarea>
                 </div>
                 
                 <div>
+                    <label for="local_encontrado" class="block text-sm font-medium text-gray-300">Local Onde Foi Encontrado</label>
+                    <input type="text" id="local_encontrado" name="local_encontrado" required class="mt-1 block w-full px-4 py-2 bg-gray-600 text-gray-100 border border-gray-500 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                </div>
+
+                <div>
+                    <label for="data_encontrado" class="block text-sm font-medium text-gray-300">Data em que foi Encontrado</label>
+                    <input type="text" id="data_encontrado" name="data_encontrado" placeholder="DD/MM/AAAA" maxlength="10" class="mt-1 block w-full px-4 py-2 bg-gray-600 text-gray-100 border border-gray-500 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                </div>
+                
+                 <div>
+                    <label for="hora_encontrado" class="block text-sm font-medium text-gray-300">Hora em que foi Encontrado</label>
+                    <input type="text" id="hora_encontrado" name="hora_encontrado" placeholder="HH:mm" maxlength="5" class="mt-1 block w-full px-4 py-2 bg-gray-600 text-gray-100 border border-gray-500 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200">
+                </div>
+
+                <div>
+                    <label for="observacao" class="block text-sm font-medium text-gray-300">Observação</label>
+                    <textarea id="observacao" name="observacao" rows="3" class="mt-1 block w-full px-4 py-2 bg-gray-600 text-gray-100 border border-gray-500 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200"></textarea>
+                </div>
+                
+                <div>
                      <label for="foto" class="block text-sm font-medium text-gray-300">Anexar Foto</label>
                      <div class="flex items-center space-x-4 mt-1">
-                         <input type="file" id="foto" name="foto" accept="image/*" class="block w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
-                         <button type="button" id="btn-camera" class="p-2 rounded-full text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-10 h-10 flex items-center justify-center">
-                            <i class="fas fa-camera"></i>
-                         </button>
+                         <input type="file" id="foto" name="foto" accept="image/*" class="custom-file-input block w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                         <button type="button" id="btn-camera" class="py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200">Câmera</button>
                      </div>
+                     <span id="file-name" class="block mt-2 text-sm text-gray-400">Nenhum arquivo selecionado</span>
                 </div>
                 
                 <div class="flex space-x-4">
@@ -277,15 +314,6 @@
             <div id="liberacoes-list" class="space-y-4">
                 <!-- Lista de itens encontrados será renderizada aqui -->
             </div>
-        </div>
-
-        <!-- Botão de adicionar item na parte inferior fixa -->
-        <div class="fixed bottom-4 right-4 z-40">
-            <button id="btn-add-item" class="p-4 rounded-full shadow-lg text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-                </svg>
-            </button>
         </div>
     </div>
 
@@ -345,6 +373,7 @@
 
     <!-- Script do Supabase (substitua a versão se necessário) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
     <!-- JavaScript para a lógica do aplicativo -->
     <script type="module">
@@ -380,8 +409,12 @@
         const formSubmitBtn = document.getElementById('form-submit-btn');
         const formCancelBtn = document.getElementById('form-cancel-btn');
         const localEncontradoInput = document.getElementById('local_encontrado');
+        const dataEncontradoInput = document.getElementById('data_encontrado');
+        const horaEncontradoInput = document.getElementById('hora_encontrado');
         const descricaoInput = document.getElementById('descricao');
+        const observacaoInput = document.getElementById('observacao');
         const fotoInput = document.getElementById('foto');
+        const fileNameSpan = document.getElementById('file-name');
         
         // Novos elementos para os ícones de olho
         const togglePasswordBtn = document.getElementById('toggle-password');
@@ -442,6 +475,7 @@
         const HISTORY_LIMIT = 50;
         let searchTimeout;
         let historicoSearchTimeout;
+        const PURGE_TIME_IN_MONTHS = 3;
 
         // Variável para armazenar a foto da câmera
         let capturedImageFile = null;
@@ -595,7 +629,7 @@
         btnHistorico.addEventListener('click', () => {
             liberacaoPage.style.display = 'none';
             historicoPage.style.display = 'flex';
-            fetchHistorico(currentSession, 'all');
+            fetchHistorico(currentSession);
         });
 
 
@@ -621,6 +655,11 @@
             formSubmitBtn.textContent = 'Salvar Item';
             addItemForm.reset();
             itemToEdit = null;
+            capturedImageFile = null;
+            fileNameSpan.textContent = 'Nenhum arquivo selecionado';
+            // Preenche o campo de data e hora com o valor atual
+            dataEncontradoInput.value = moment().format('DD/MM/YYYY');
+            horaEncontradoInput.value = moment().format('HH:mm');
         });
 
         // Lógica para cancelar a edição
@@ -637,7 +676,10 @@
             e.preventDefault();
             
             const localEncontrado = localEncontradoInput.value;
+            const dataEncontrado = dataEncontradoInput.value;
+            const horaEncontrado = horaEncontradoInput.value;
             const descricao = descricaoInput.value;
+            const observacao = observacaoInput.value;
             let file = fotoInput.files[0];
 
             // Se uma foto foi capturada pela câmera, use-a
@@ -645,8 +687,28 @@
                 file = capturedImageFile;
             }
             
-            if (!localEncontrado || !descricao) {
-                 showValidationMessage('Por favor, preencha o local e a descrição do item.');
+            if (!localEncontrado || !dataEncontrado || !horaEncontrado || !descricao) {
+                 showValidationMessage('Por favor, preencha o local, a data, o horário e a descrição do item.');
+                 return;
+            }
+
+            // Nova validação para tornar a foto obrigatória
+            if (!file && !capturedImageFile) {
+                 showValidationMessage('É obrigatório carregar ou tirar uma foto do item.');
+                 return;
+            }
+
+            // Validação de formato de data e hora
+            const combinedDateTime = `${dataEncontrado} ${horaEncontrado}`;
+            const parsedDate = moment(combinedDateTime, 'DD/MM/YYYY HH:mm', true);
+            if (!parsedDate.isValid()) {
+                showValidationMessage('O formato da data ou hora está incorreto.');
+                return;
+            }
+
+            // Validação para não permitir datas futuras
+            if (parsedDate.isAfter(moment())) {
+                 showValidationMessage('A data e hora de encontro do item não podem estar no futuro.');
                  return;
             }
             
@@ -676,9 +738,11 @@
 
             const payload = { 
                 descricao: descricao,
-                local_encontrado: localEncontrado, 
+                local_encontrado: localEncontrado,
+                data_encontrado: parsedDate.toISOString(),
                 criador_nome: currentSession.user.email,
                 anexo_url: filePath ? supabase.storage.from('achados_fotos').getPublicUrl(filePath).data.publicUrl : null,
+                observacao: observacao
             };
 
             if (itemToEdit) {
@@ -705,7 +769,7 @@
                     if (historicoPage.style.display !== 'none') {
                         fetchHistorico(currentSession);
                     } else {
-                        fetchAchados(currentSession, currentFilterType, currentFilterDate);
+                        fetchAchados(currentSession);
                     }
                 }
 
@@ -728,7 +792,7 @@
                     addItemForm.reset();
                     addItemForm.style.display = 'none';
                     capturedImageFile = null;
-                    fetchAchados(currentSession, currentFilterType, currentFilterDate);
+                    fetchAchados(currentSession);
                 }
             }
         });
@@ -749,6 +813,9 @@
             
             descricaoInput.value = itemToEdit.descricao || '';
             localEncontradoInput.value = itemToEdit.local_encontrado || '';
+            dataEncontradoInput.value = itemToEdit.data_encontrado ? moment(itemToEdit.data_encontrado).format('DD/MM/YYYY') : '';
+            horaEncontradoInput.value = itemToEdit.data_encontrado ? moment(itemToedit.data_encontrado).format('HH:mm') : '';
+            observacaoInput.value = itemToEdit.observacao || '';
 
             formSubtitle.textContent = 'Editar Item';
             formSubmitBtn.textContent = 'Salvar Edição';
@@ -760,6 +827,27 @@
             itemToDeleteId = id;
             devolverModal.style.display = 'flex';
         }
+        
+        async function deleteItem(id) {
+            const { error } = await supabase
+                .from('achados')
+                .update({ 
+                    devolvido: true, 
+                    motivo_devolucao: `Deletado permanentemente por: ${currentSession.user.email}`,
+                    data_devolucao: new Date().toISOString()
+                })
+                .eq('id', id);
+            
+            if (error) {
+                console.error('Erro ao deletar o item:', error);
+                showMessage('Erro ao deletar o item.', true);
+            } else {
+                showMessage('Item deletado com sucesso!');
+                fetchAchados(currentSession);
+                checkAndPurgeHistory();
+            }
+        }
+
 
         // Lógica para o modal de devolução
         confirmDevolverBtn.addEventListener('click', async () => {
@@ -787,7 +875,7 @@
                 showMessage('Erro ao devolver o item.', true);
             } else {
                 showMessage('Item devolvido com sucesso!');
-                fetchAchados(currentSession, currentFilterType, currentFilterDate);
+                fetchAchados(currentSession);
                 checkAndPurgeHistory();
             }
 
@@ -810,58 +898,55 @@
             imageModal.style.display = 'none';
         });
 
-
+        // Função para verificar e purgar itens antigos do histórico
         async function checkAndPurgeHistory() {
+            const threeMonthsAgo = moment().subtract(PURGE_TIME_IN_MONTHS, 'months');
             const { data, error } = await supabase
                 .from('achados')
                 .select('id, data_devolucao')
-                .eq('devolvido', true)
-                .order('data_devolucao', { ascending: true });
+                .eq('devolvido', true);
 
             if (error) {
                 console.error('Erro ao verificar o histórico:', error);
                 return;
             }
 
-            if (data && data.length > HISTORY_LIMIT) {
-                const itemParaExcluir = data[0];
-                const { error: deleteError } = await supabase
-                    .from('achados')
-                    .delete()
-                    .eq('id', itemParaExcluir.id);
+            if (data && data.length > 0) {
+                const oldItems = data.filter(item => moment(item.data_devolucao).isBefore(threeMonthsAgo));
+                
+                if (oldItems.length > 0) {
+                    const itemIdsToPurge = oldItems.map(item => item.id);
+                    
+                    const { error: updateError } = await supabase
+                        .from('achados')
+                        .update({ motivo_devolucao: 'Deletado automaticamente pelo sistema.' })
+                        .in('id', itemIdsToPurge);
 
-                if (deleteError) {
-                    console.error('Erro ao excluir permanentemente o item:', deleteError);
-                } else {
-                    console.log('Item mais antigo excluído permanentemente.');
+                    if (updateError) {
+                        console.error('Erro ao atualizar motivo de purga:', updateError);
+                    } else {
+                        const { error: deleteError } = await supabase
+                            .from('achados')
+                            .delete()
+                            .in('id', itemIdsToPurge);
+
+                        if (deleteError) {
+                            console.error('Erro ao excluir permanentemente os itens:', deleteError);
+                        } else {
+                            console.log(`Itens mais antigos que ${PURGE_TIME_IN_MONTHS} meses foram excluídos permanentemente.`);
+                        }
+                    }
                 }
             }
         }
         
-        async function fetchHistorico(session, filterType = 'all', date = null, searchTerm = null) {
-            
-            historicoBtnFilterAll.classList.remove('bg-indigo-600');
-            historicoFilterDateInput.classList.remove('bg-indigo-600');
+        async function fetchHistorico(session, searchTerm = null) {
             
             let query = supabase
                 .from('achados')
                 .select('*')
                 .eq('devolvido', true)
-                .order('data_devolucao', { ascending: false });
-
-            switch (filterType) {
-                case 'all':
-                    historicoBtnFilterAll.classList.add('bg-indigo-600');
-                    break;
-                case 'date':
-                    historicoFilterDateInput.classList.add('bg-indigo-600');
-                    if (date) {
-                         const startOfDay = new Date(date + 'T00:00:00Z').toISOString();
-                         const endOfDay = new Date(date + 'T23:59:59Z').toISOString();
-                         query = query.gte('data_devolucao', startOfDay).lte('data_devolucao', endOfDay);
-                    }
-                    break;
-            }
+                .order('data_encontrado', { ascending: false });
 
             const { data, error } = await query;
 
@@ -875,7 +960,7 @@
             if (searchTerm && searchTerm.trim() !== '') {
                 const normalizedSearchTerm = normalizeText(searchTerm);
                 filteredData = data.filter(item => {
-                    const textToSearch = `${item.descricao} ${item.local_encontrado}`;
+                    const textToSearch = `${item.descricao} ${item.local_encontrado} ${item.criador_nome} ${item.quem_retirou} ${item.motivo_devolucao}`;
                     return normalizeText(textToSearch).includes(normalizedSearchTerm);
                 });
             }
@@ -884,30 +969,49 @@
             historicoList.innerHTML = '';
             if (filteredData && filteredData.length > 0) {
                 filteredData.forEach(item => {
-                    const cardClasses = 'bg-gray-700 p-4 rounded-lg shadow-lg transition-all duration-300 hover:bg-gray-600';
+                    const cardClasses = 'bg-gray-700 p-4 rounded-lg shadow-lg transition-all duration-300 hover:bg-gray-600 flex flex-col sm:flex-row items-center border border-gray-600';
                     const itemCard = document.createElement('div');
                     itemCard.className = cardClasses;
 
-                    const dataDevolucaoFormatada = new Date(item.data_devolucao).toLocaleString('pt-br');
+                    const dataDevolucaoFormatada = moment(item.data_devolucao).format('DD/MM/YYYY HH:mm');
+                    const dataEncontradoFormatada = item.data_encontrado ? moment(item.data_encontrado).format('DD/MM/YYYY HH:mm') : 'N/A';
 
                     // Cria o elemento da foto se a URL existir
                     let fotoElement = null;
                     if (item.anexo_url) {
                       fotoElement = document.createElement('img');
                       fotoElement.src = item.anexo_url;
-                      fotoElement.className = 'rounded-lg mb-2 cursor-pointer hover:opacity-80 transition-opacity';
+                      fotoElement.className = 'rounded-lg mb-4 sm:mb-0 sm:mr-4 w-full sm:w-48 h-48 object-cover cursor-pointer hover:opacity-80 transition-opacity';
                       fotoElement.alt = 'Foto do item';
                       fotoElement.onclick = () => expandImage(item.anexo_url);
+                    } else {
+                       // Container para "SEM FOTO"
+                       const noFotoContainer = document.createElement('div');
+                       noFotoContainer.className = 'rounded-lg mb-4 sm:mb-0 sm:mr-4 w-full sm:w-48 h-48 bg-gray-500 flex items-center justify-center text-center text-gray-200 font-bold';
+                       noFotoContainer.textContent = "SEM FOTO";
+                       fotoElement = noFotoContainer;
                     }
 
                     // Cria o contêiner de detalhes
                     const detailsContainer = document.createElement('div');
+                    detailsContainer.className = 'flex-grow';
+                    let statusText = '';
+                    if (item.quem_retirou) {
+                        statusText = `Devolvido para ${item.quem_retirou} por: ${item.devolvido_por}`;
+                    } else if (item.motivo_devolucao) {
+                        statusText = `${item.motivo_devolucao}`;
+                    } else {
+                         statusText = `Data de devolução: ${dataDevolucaoFormatada}`;
+                    }
+
                     detailsContainer.innerHTML = `
-                        <h3 class="font-bold text-gray-100">Descrição: ${item.descricao}</h3>
-                        <p class="text-sm text-gray-400">Local Encontrado: ${item.local_encontrado || 'N/A'}</p>
-                        <p class="text-sm text-gray-400">Quem Retirou: ${item.quem_retirou || 'N/A'}</p>
-                        <p class="text-sm text-gray-400">Criado por: ${item.criador_nome}</p>
-                        <p class="text-sm text-red-400 mt-2">Devolvido por: ${item.devolvido_por} em ${dataDevolucaoFormatada}</p>
+                        <p class="text-sm text-gray-400">Encontrado em: <strong class="text-lg text-gray-100">${dataEncontradoFormatada}</strong></p>
+                        <p class="text-sm text-gray-400">Descrição: <strong class="text-lg text-gray-100">${item.descricao}</strong></p>
+                        <p class="text-sm text-gray-400">Local Encontrado: <strong class="text-lg text-gray-100">${item.local_encontrado || 'N/A'}</strong></p>
+                        <p class="text-sm text-gray-400 mt-2">Adicionado ao sistema por: <strong class="text-lg text-gray-100">${item.criador_nome}</strong></p>
+                        <p class="text-sm text-gray-400">Data de adição no sistema: ${moment(item.created_at).format('DD/MM/YYYY HH:mm')}</p>
+                        <p class="text-sm text-gray-400">Observação: <strong class="text-lg text-gray-100">${item.observacao || 'N/A'}</strong></p>
+                        <p class="text-sm text-red-400 mt-2">${statusText}</p>
                     `;
                     
                     if (fotoElement) {
@@ -922,40 +1026,13 @@
             }
         }
         
-        function updateFilterButtons(selectedFilter) {
-            btnFilterAll.classList.remove('bg-indigo-600');
-            filterDateInput.classList.remove('bg-indigo-600');
+        async function fetchAchados(session, searchTerm = null) {
             
-            switch (selectedFilter) {
-                case 'all':
-                    btnFilterAll.classList.add('bg-indigo-600');
-                    break;
-                case 'date':
-                    filterDateInput.classList.add('bg-indigo-600');
-                    break;
-            }
-        }
-
-
-        async function fetchAchados(session, filterType = 'all', date = null, searchTerm = null) {
-            updateFilterButtons(currentFilterType);
-            currentFilterType = filterType;
-            currentFilterDate = date;
-
             let query = supabase
                 .from('achados')
                 .select('*')
-                .eq('devolvido', false);
-
-            if (filterType === 'date' && date) {
-                // Altera a consulta para um intervalo de datas em vez de uma correspondência exata
-                const startOfDay = new Date(date + 'T00:00:00Z').toISOString();
-                const endOfDay = new Date(date + 'T23:59:59Z').toISOString();
-                query = query.gte('created_at', startOfDay).lte('created_at', endOfDay);
-            }
-            
-            query = query.order('created_at', { ascending: false });
-
+                .eq('devolvido', false)
+                .order('data_encontrado', { ascending: false });
 
             const { data, error } = await query;
 
@@ -968,7 +1045,7 @@
             if (searchTerm && searchTerm.trim() !== '') {
                 const normalizedSearchTerm = normalizeText(searchTerm);
                 filteredData = data.filter(item => {
-                    const textToSearch = `${item.descricao} ${item.local_encontrado}`;
+                    const textToSearch = `${item.descricao} ${item.local_encontrado} ${item.criador_nome} ${item.observacao}`;
                     return normalizeText(textToSearch).includes(normalizedSearchTerm);
                 });
             }
@@ -976,7 +1053,7 @@
             itensList.innerHTML = ''; // Limpa a lista antes de renderizar
             if (filteredData && filteredData.length > 0) {
                 filteredData.forEach(item => {
-                    const cardClasses = 'bg-gray-700 p-4 rounded-lg shadow-lg transition-all duration-300 hover:bg-gray-600 flex flex-col sm:flex-row items-center';
+                    const cardClasses = 'bg-gray-700 p-4 rounded-lg shadow-lg transition-all duration-300 hover:bg-gray-600 flex flex-col sm:flex-row items-center border border-gray-600';
                     
                     const itemCard = document.createElement('div');
                     itemCard.className = cardClasses;
@@ -986,12 +1063,19 @@
                     
                     const devolverButton = document.createElement('button');
                     devolverButton.className = 'py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-200';
-                    devolverButton.textContent = 'Devolver';
+                    devolverButton.textContent = 'Devolução';
                     devolverButton.onclick = () => devolverItem(item.id);
 
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = 'py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200';
+                    deleteButton.textContent = 'Deletar';
+                    deleteButton.onclick = () => deleteItem(item.id);
+
                     actionsContainer.appendChild(devolverButton);
+                    actionsContainer.appendChild(deleteButton);
                     
-                    const dataCriacaoFormatada = new Date(item.created_at).toLocaleString('pt-br');
+                    const dataCriacaoFormatada = moment(item.created_at).format('DD/MM/YYYY HH:mm');
+                    const dataEncontradoFormatada = item.data_encontrado ? moment(item.data_encontrado).format('DD/MM/YYYY HH:mm') : 'N/A';
 
                     // Cria o elemento da foto se a URL existir
                     let fotoElement = null;
@@ -1001,15 +1085,23 @@
                         fotoElement.className = 'rounded-lg mb-4 sm:mb-0 sm:mr-4 w-full sm:w-48 h-48 object-cover cursor-pointer hover:opacity-80 transition-opacity';
                         fotoElement.alt = 'Foto do item';
                         fotoElement.onclick = () => expandImage(item.anexo_url);
+                    } else {
+                       // Container para "SEM FOTO"
+                       const noFotoContainer = document.createElement('div');
+                       noFotoContainer.className = 'rounded-lg mb-4 sm:mb-0 sm:mr-4 w-full sm:w-48 h-48 bg-gray-500 flex items-center justify-center text-center text-gray-200 font-bold';
+                       noFotoContainer.textContent = "SEM FOTO";
+                       fotoElement = noFotoContainer;
                     }
 
                     const detailsContainer = document.createElement('div');
                     detailsContainer.className = 'flex-grow';
                     detailsContainer.innerHTML = `
-                        <h3 class="font-bold text-gray-100">Descrição: ${item.descricao}</h3>
-                        <p class="text-sm text-gray-400">Local Encontrado: ${item.local_encontrado || 'N/A'}</p>
-                        <p class="text-sm text-gray-500 mt-2">Encontrado por: ${item.criador_nome}</p>
-                        <p class="text-sm text-gray-400 mt-2">Data: ${dataCriacaoFormatada}</p>
+                        <p class="text-sm text-gray-400">Encontrado em: <strong class="text-lg text-gray-100">${dataEncontradoFormatada}</strong></p>
+                        <p class="text-sm text-gray-400">Descrição: <strong class="text-lg text-gray-100">${item.descricao}</strong></p>
+                        <p class="text-sm text-gray-400">Local Encontrado: <strong class="text-lg text-gray-100">${item.local_encontrado || 'N/A'}</strong></p>
+                        <p class="text-sm text-gray-400">Observação: <strong class="text-lg text-gray-100">${item.observacao || 'N/A'}</strong></p>
+                        <p class="text-sm text-gray-400 mt-2">Adicionado ao sistema por: <strong class="text-lg text-gray-100">${item.criador_nome}</strong></p>
+                        <p class="text-sm text-gray-400">Data de adição no sistema: ${dataCriacaoFormatada}</p>
                     `;
                     
                     if (fotoElement) {
@@ -1025,22 +1117,10 @@
             }
         }
 
-        btnFilterAll.addEventListener('click', () => {
-            if (currentSession) {
-                fetchAchados(currentSession, 'all', null, searchInput.value);
-            }
-        });
-
-        filterDateInput.addEventListener('change', (event) => {
-            if (currentSession) {
-                fetchAchados(currentSession, 'date', event.target.value, searchInput.value);
-            }
-        });
-
         clearSearchBtn.addEventListener('click', () => {
             searchInput.value = '';
             if (currentSession) {
-                fetchAchados(currentSession, currentFilterType, currentFilterDate, '');
+                fetchAchados(currentSession, '');
             }
         });
         
@@ -1048,27 +1128,15 @@
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 if (currentSession) {
-                    fetchAchados(currentSession, currentFilterType, currentFilterDate, event.target.value);
+                    fetchAchados(currentSession, event.target.value);
                 }
             }, 500);
         });
         
-        historicoBtnFilterAll.addEventListener('click', () => {
-            if (currentSession) {
-                fetchHistorico(currentSession, 'all', null, historicoSearchInput.value);
-            }
-        });
-
-        historicoFilterDateInput.addEventListener('change', (event) => {
-            if (currentSession) {
-                fetchHistorico(currentSession, 'date', event.target.value, historicoSearchInput.value);
-            }
-        });
-
         historicoClearSearchBtn.addEventListener('click', () => {
             historicoSearchInput.value = '';
             if (currentSession) {
-                fetchHistorico(currentSession, 'all', historicoFilterDateInput.value, '');
+                fetchHistorico(currentSession, '');
             }
         });
 
@@ -1076,17 +1144,10 @@
             clearTimeout(historicoSearchTimeout);
             historicoSearchTimeout = setTimeout(() => {
                 if (currentSession) {
-                    fetchHistorico(currentSession, 'all', historicoFilterDateInput.value, event.target.value);
+                    fetchHistorico(currentSession, event.target.value);
                 }
             }, 500);
         });
-
-        function setInitialDateAndFetch() {
-            // Remove o valor do campo de data e busca todos os itens por padrão
-            filterDateInput.value = '';
-            updateFilterButtons('all');
-            fetchAchados(currentSession, 'all');
-        }
 
         const handleAuthCallback = async () => {
             const hash = window.location.hash;
@@ -1148,7 +1209,8 @@
                 accessControlTitle.style.opacity = '0';
                 accessControlTitle.style.pointerEvents = 'none';
 
-                setInitialDateAndFetch();
+                fetchAchados(currentSession);
+                checkAndPurgeHistory();
                 
             } else {
                 authContainer.style.display = 'block';
@@ -1210,6 +1272,75 @@
                 videoStream.getTracks().forEach(track => track.stop());
             }
             cameraModal.style.display = 'none';
+        });
+
+        // Lógica de formatação de entrada para data e hora
+        function formatInput(input) {
+            const oldValue = input.value;
+            let start = input.selectionStart;
+            let end = input.selectionEnd;
+
+            let value = oldValue.replace(/\D/g, '');
+            let newValue = '';
+
+            if (input.id === 'data_encontrado') {
+                if (value.length > 2) {
+                    newValue += value.substring(0, 2) + '/';
+                    if (value.length > 4) {
+                        newValue += value.substring(2, 4) + '/';
+                        newValue += value.substring(4, 8);
+                    } else {
+                        newValue += value.substring(2);
+                    }
+                } else {
+                    newValue = value;
+                }
+                if (newValue.length > 10) {
+                    newValue = newValue.substring(0, 10);
+                }
+
+                input.value = newValue;
+                
+                // Ajusta a posição do cursor
+                let newPos = start;
+                if (oldValue.length < newValue.length) {
+                    if (start === 2 || start === 5) newPos++;
+                }
+                if (oldValue.length > newValue.length) {
+                    if (oldValue.charAt(start-1) === '/' && start > 1) newPos--;
+                }
+                input.setSelectionRange(newPos, newPos);
+
+            } else if (input.id === 'hora_encontrado') {
+                if (value.length > 2) {
+                    newValue = value.substring(0, 2) + ':' + value.substring(2, 4);
+                } else {
+                    newValue = value;
+                }
+                if (newValue.length > 5) {
+                    newValue = newValue.substring(0, 5);
+                }
+                
+                input.value = newValue;
+
+                // Ajusta a posição do cursor
+                let newPos = start;
+                if (oldValue.length < newValue.length && start === 2) newPos++;
+                if (oldValue.length > newValue.length && oldValue.charAt(start-1) === ':' && start > 1) newPos--;
+                input.setSelectionRange(newPos, newPos);
+            }
+        }
+
+        dataEncontradoInput.addEventListener('input', () => formatInput(dataEncontradoInput));
+        horaEncontradoInput.addEventListener('input', () => formatInput(horaEncontradoInput));
+
+        // Lógica para atualizar o nome do arquivo selecionado
+        fotoInput.addEventListener('change', () => {
+            if (fotoInput.files.length > 0) {
+                fileNameSpan.textContent = fotoInput.files[0].name;
+            } else {
+                fileNameSpan.textContent = 'Nenhum arquivo selecionado';
+            }
         });
 
     </script>
