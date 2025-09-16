@@ -80,40 +80,6 @@
         ::-webkit-scrollbar-thumb:hover {
             background-color: #5d6776;
         }
-
-        /* Estilos customizados para o input de arquivo */
-        .custom-file-input {
-            color: transparent;
-            font-size: 0;
-            overflow: hidden;
-        }
-        .custom-file-input::-webkit-file-upload-button {
-            visibility: hidden;
-        }
-        .custom-file-input::before {
-            content: 'Carregar arquivo';
-            display: inline-block;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            padding: 0.5rem 1rem;
-            outline: none;
-            white-space: nowrap;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.875rem;
-            transition: background-color 0.2s;
-        }
-        .custom-file-input:hover::before {
-            background-color: #1d4ed8;
-        }
-        .custom-file-input:active::before {
-            background-color: #1e40af;
-        }
-        .custom-file-input:disabled::before {
-            background-color: #4b5563;
-        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-300 min-h-screen flex items-center justify-center p-4">
@@ -300,7 +266,10 @@
                      <label for="foto" class="block text-sm font-medium text-gray-300">Anexar Foto</label>
                      <div class="flex items-center space-x-4 mt-1">
                          <button type="button" id="btn-camera" class="py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200">Câmera</button>
-                         <input type="file" id="foto" name="foto" accept="image/*" class="custom-file-input block w-full text-gray-300">
+                         <button type="button" id="btn-upload" class="py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200">
+                             Carregar arquivo
+                         </button>
+                         <input type="file" id="foto" name="foto" accept="image/*" class="hidden">
                      </div>
                 </div>
 
@@ -421,6 +390,7 @@
             const observacaoInput = document.getElementById('observacao');
             const fotoInput = document.getElementById('foto');
             const addItemForm = document.getElementById('add-item-form');
+            const btnUpload = document.getElementById('btn-upload'); // Novo botão
             
             // Novos elementos para os ícones de olho
             const togglePasswordBtn = document.getElementById('toggle-password');
@@ -692,6 +662,11 @@
                 clearPhotoThumbnail();
             });
 
+            // Listener para o novo botão de upload
+            btnUpload.addEventListener('click', () => {
+                fotoInput.click();
+            });
+
             // Listener para o input de arquivo
             fotoInput.addEventListener('change', () => {
                 if (fotoInput.files.length > 0) {
@@ -921,6 +896,8 @@
                 }
 
                 itemToDeleteId = null;
+                // Limpa o campo de entrada do nome
+                quemRetirouInput.value = '';
             });
 
             cancelDevolverBtn.addEventListener('click', () => {
