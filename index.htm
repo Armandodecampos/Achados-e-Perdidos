@@ -62,22 +62,22 @@
         }
         
         /* Estilos da barra de rolagem para navegadores baseados em WebKit */
-        ::-webkit-scrollbar {
-            width: 8px;
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 60px;
         }
 
-        ::-webkit-scrollbar-track {
+        .custom-scrollbar::-webkit-scrollbar-track {
             background: #374151;
             border-radius: 10px;
         }
 
-        ::-webkit-scrollbar-thumb {
+        .custom-scrollbar::-webkit-scrollbar-thumb {
             background-color: #4b5563;
             border-radius: 10px;
             border: 2px solid #374151;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background-color: #5d6776;
         }
     </style>
@@ -202,7 +202,7 @@
             </div>
         </div>
         
-        <div class="fixed top-[7rem] left-12 right-12 bottom-12 bg-gray-800 rounded-xl shadow-lg p-8 overflow-y-auto">
+        <div class="fixed top-[6rem] left-4 right-4 bottom-4 bg-gray-800 rounded-xl shadow-lg p-8 overflow-y-auto custom-scrollbar">
             <div id="historico-list" class="space-y-4">
                 <!-- Lista de itens devolvidos será renderizada aqui -->
             </div>
@@ -285,7 +285,7 @@
             </div>
         </form>
         
-        <div class="fixed top-[7rem] left-12 right-12 bottom-12 bg-gray-800 rounded-xl shadow-lg p-8 overflow-y-auto">
+        <div class="fixed top-[6rem] left-4 right-4 bottom-4 bg-gray-800 rounded-xl shadow-lg p-8 overflow-y-auto custom-scrollbar">
             <div id="liberacoes-list" class="space-y-4">
                 <!-- Lista de itens encontrados será renderizada aqui -->
             </div>
@@ -699,10 +699,11 @@
                      return;
                 }
 
-                // Nova validação para tornar a foto obrigatória
-                if (!file && !capturedImageFile) {
-                     showValidationMessage('É obrigatório carregar ou tirar uma foto do item.');
-                     return;
+                // Validação de foto corrigida
+                const hasExistingPhoto = itemToEdit && itemToEdit.anexo_url;
+                if (!file && !capturedImageFile && !hasExistingPhoto) {
+                    showValidationMessage('É obrigatório carregar ou tirar uma foto do item.');
+                    return;
                 }
 
                 // Validação de formato de data e hora
@@ -719,11 +720,16 @@
                      return;
                 }
                 
-                let filePath = null;
+                const payload = { 
+                    descricao: descricao,
+                    local_encontrado: localEncontrado,
+                    data_encontrado: parsedDate.toISOString(),
+                    observacao: observacao
+                };
 
                 if (file) {
                      const fileName = `${Date.now()}-${file.name}`;
-                     filePath = `${currentSession.user.id}/${fileName}`;
+                     const filePath = `${currentSession.user.id}/${fileName}`;
 
                      try {
                          const { error: uploadError } = await supabase
@@ -736,6 +742,7 @@
                              showValidationMessage(`Erro ao fazer upload da foto: ${uploadError.message}`);
                              return;
                          }
+                         payload.anexo_url = supabase.storage.from('achados_fotos').getPublicUrl(filePath).data.publicUrl;
                      } catch (e) {
                          console.error('Erro de armazenamento:', e);
                          showValidationMessage('Erro de armazenamento. Verifique se o bucket "achados_fotos" existe.');
@@ -743,22 +750,7 @@
                      }
                 }
 
-                const payload = { 
-                    descricao: descricao,
-                    local_encontrado: localEncontrado,
-                    data_encontrado: parsedDate.toISOString(),
-                    criador_nome: currentSession.user.email,
-                    anexo_url: filePath ? supabase.storage.from('achados_fotos').getPublicUrl(filePath).data.publicUrl : null,
-                    observacao: observacao
-                };
-
                 if (itemToEdit) {
-                    if (formSubmitBtn.textContent === 'Marcar como Devolvido') {
-                        payload.devolvido = true;
-                        payload.data_devolucao = new Date().toISOString();
-                        payload.devolvido_por = currentSession.user.email;
-                    }
-
                     const { data, error } = await supabase
                         .from('achados')
                         .update(payload)
@@ -782,7 +774,9 @@
                     }
 
                 } else {
-                    // Ao inserir um novo item, a política de segurança deve permitir a operação.
+                    // Adiciona criador_nome apenas para novos itens
+                    payload.criador_nome = currentSession.user.email;
+                    
                     const { data, error } = await supabase
                         .from('achados')
                         .insert([payload]);
@@ -823,7 +817,7 @@
                 descricaoInput.value = itemToEdit.descricao || '';
                 localEncontradoInput.value = itemToEdit.local_encontrado || '';
                 dataEncontradoInput.value = itemToEdit.data_encontrado ? moment(itemToEdit.data_encontrado).format('DD/MM/YYYY') : '';
-                horaEncontradoInput.value = itemToEdit.data_encontrado ? moment(itemToedit.data_encontrado).format('HH:mm') : '';
+                horaEncontradoInput.value = itemToEdit.data_encontrado ? moment(itemToEdit.data_encontrado).format('HH:mm') : '';
                 observacaoInput.value = itemToEdit.observacao || '';
 
                 formSubtitle.textContent = 'Editar Item';
@@ -849,7 +843,7 @@
                     .from('achados')
                     .update({ 
                         devolvido: true, 
-                        motivo_devolucao: `Deletado permanentemente por: ${currentSession.user.email}`,
+                        devolvido_por: currentSession.user.email,
                         data_devolucao: new Date().toISOString()
                     })
                     .eq('id', id);
@@ -930,29 +924,20 @@
                 }
 
                 if (data && data.length > 0) {
-                    const oldItems = data.filter(item => moment(item.data_devolucao).isBefore(threeMonthsAgo));
+                    const oldItems = data.filter(item => item.data_devolucao && moment(item.data_devolucao).isBefore(threeMonthsAgo));
                     
                     if (oldItems.length > 0) {
                         const itemIdsToPurge = oldItems.map(item => item.id);
                         
-                        const { error: updateError } = await supabase
+                        const { error: deleteError } = await supabase
                             .from('achados')
-                            .update({ motivo_devolucao: 'Deletado automaticamente pelo sistema.' })
+                            .delete()
                             .in('id', itemIdsToPurge);
 
-                        if (updateError) {
-                            console.error('Erro ao atualizar motivo de purga:', updateError);
+                        if (deleteError) {
+                            console.error('Erro ao excluir permanentemente os itens:', deleteError);
                         } else {
-                            const { error: deleteError } = await supabase
-                                .from('achados')
-                                .delete()
-                                .in('id', itemIdsToPurge);
-
-                            if (deleteError) {
-                                console.error('Erro ao excluir permanentemente os itens:', deleteError);
-                            } else {
-                                console.log(`Itens mais antigos que ${PURGE_TIME_IN_MONTHS} meses foram excluídos permanentemente.`);
-                            }
+                            console.log(`Itens mais antigos que ${PURGE_TIME_IN_MONTHS} meses foram excluídos permanentemente.`);
                         }
                     }
                 }
@@ -978,7 +963,7 @@
                 if (searchTerm && searchTerm.trim() !== '') {
                     const normalizedSearchTerm = normalizeText(searchTerm);
                     filteredData = data.filter(item => {
-                        const textToSearch = `${item.descricao} ${item.local_encontrado} ${item.criador_nome} ${item.quem_retirou} ${item.motivo_devolucao}`;
+                        const textToSearch = `${item.descricao} ${item.local_encontrado} ${item.criador_nome} ${item.quem_retirou || ''}`;
                         return normalizeText(textToSearch).includes(normalizedSearchTerm);
                     });
                 }
@@ -991,7 +976,7 @@
                         const itemCard = document.createElement('div');
                         itemCard.className = cardClasses;
 
-                        const dataDevolucaoFormatada = moment(item.data_devolucao).format('DD/MM/YYYY HH:mm');
+                        const dataDevolucaoFormatada = item.data_devolucao ? moment(item.data_devolucao).format('DD/MM/YYYY HH:mm') : 'N/A';
                         const dataEncontradoFormatada = item.data_encontrado ? moment(item.data_encontrado).format('DD/MM/YYYY HH:mm') : 'N/A';
 
                         // Cria o elemento da foto se a URL existir
@@ -1016,10 +1001,8 @@
                         let statusText = '';
                         if (item.quem_retirou) {
                             statusText = `Devolvido para ${item.quem_retirou} por: ${item.devolvido_por}`;
-                        } else if (item.motivo_devolucao) {
-                            statusText = `${item.motivo_devolucao}`;
                         } else {
-                             statusText = `Data de devolução: ${dataDevolucaoFormatada}`;
+                            statusText = `Item deletado por ${item.devolvido_por || 'sistema'} em ${dataDevolucaoFormatada}.`;
                         }
 
                         detailsContainer.innerHTML = `
@@ -1079,6 +1062,15 @@
                         const actionsContainer = document.createElement('div');
                         actionsContainer.className = 'flex items-center space-x-2 mt-4 sm:mt-0 sm:ml-auto';
                         
+                        // Verifica se o usuário atual é o criador do item para exibir o botão de editar
+                        if (currentSession && item.criador_nome === currentSession.user.email) {
+                            const editButton = document.createElement('button');
+                            editButton.className = 'py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition duration-200';
+                            editButton.textContent = 'Editar';
+                            editButton.onclick = () => editItem(item.id);
+                            actionsContainer.appendChild(editButton);
+                        }
+
                         const devolverButton = document.createElement('button');
                         devolverButton.className = 'py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-200';
                         devolverButton.textContent = 'Devolução';
@@ -1361,3 +1353,4 @@
     </script>
 </body>
 </html>
+
