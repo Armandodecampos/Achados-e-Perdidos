@@ -857,22 +857,37 @@
                 devolverModal.style.display = 'flex';
             }
 
-            function deleteItem(id) {
-                itemToDeleteId = id;
+            function deleteItem(item) {
+                itemToDeleteId = item;
                 document.getElementById('permanent-delete-modal').style.display = 'flex';
             }
 
             async function confirmPermanentDelete() {
                 if (!itemToDeleteId) return;
 
-                const { error } = await supabase
+                // Se houver uma foto, tente excluí-la primeiro.
+                if (itemToDeleteId.anexo_url) {
+                    const photoPath = new URL(itemToDeleteId.anexo_url).pathname.split('/achados_fotos/')[1];
+                    const { error: storageError } = await supabase
+                        .storage
+                        .from('achados_fotos')
+                        .remove([photoPath]);
+
+                    if (storageError) {
+                        console.error('Erro ao excluir a foto do armazenamento:', storageError);
+                        showValidationMessage(`Erro ao excluir a foto: ${storageError.message}`);
+                        // Você pode decidir se quer parar o processo aqui ou continuar para excluir o registro do banco de dados.
+                    }
+                }
+
+                const { error: dbError } = await supabase
                     .from('achados')
                     .delete()
-                    .eq('id', itemToDeleteId);
+                    .eq('id', itemToDeleteId.id);
 
-                if (error) {
-                    console.error('Erro ao excluir permanentemente o item:', error);
-                    showMessage('Erro ao excluir permanentemente o item.', true);
+                if (dbError) {
+                    console.error('Erro ao excluir permanentemente o item:', dbError);
+                    showValidationMessage(`Erro ao excluir o item: ${dbError.message}`);
                 } else {
                     showMessage('Item excluído permanentemente com sucesso!');
                     fetchAchados(currentSession);
@@ -1097,7 +1112,7 @@
                             const deleteButton = document.createElement('button');
                             deleteButton.className = 'py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200';
                             deleteButton.textContent = 'Deletar';
-                            deleteButton.onclick = () => deleteItem(item.id);
+                            deleteButton.onclick = () => deleteItem(item);
                             actionsContainer.appendChild(deleteButton);
                         }
 
