@@ -305,6 +305,18 @@
         </div>
     </div>
 
+    <!-- Modal de Confirmação de Exclusão Permanente -->
+    <div id="permanent-delete-modal" class="modal">
+        <div class="modal-content">
+            <h3 class="text-lg font-bold text-red-500 mb-4">Confirmar Exclusão Permanente</h3>
+            <p class="text-gray-300 mb-4">Tem certeza de que deseja excluir este item permanentemente? Esta ação não pode ser desfeita.</p>
+            <div class="modal-buttons">
+                <button id="confirm-permanent-delete-btn" class="py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200">Excluir Permanentemente</button>
+                <button id="cancel-permanent-delete-btn" class="py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-gray-200 bg-gray-600 hover:bg-gray-500 transition duration-200">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal para Usar a Câmera -->
     <div id="camera-modal" class="modal">
         <div class="modal-content max-w-lg w-full">
@@ -445,6 +457,13 @@
             // Novos elementos da miniatura da foto
             const photoThumbnailContainer = document.getElementById('photo-thumbnail-container');
             const photoThumbnail = document.getElementById('photo-thumbnail');
+
+            // Adiciona event listeners para o novo modal
+            document.getElementById('confirm-permanent-delete-btn').addEventListener('click', confirmPermanentDelete);
+            document.getElementById('cancel-permanent-delete-btn').addEventListener('click', () => {
+                document.getElementById('permanent-delete-modal').style.display = 'none';
+                itemToDeleteId = null;
+            });
 
             let isSigningUp = false;
             let currentSession = null;
@@ -838,24 +857,29 @@
                 devolverModal.style.display = 'flex';
             }
 
-            async function deleteItem(id) {
+            function deleteItem(id) {
+                itemToDeleteId = id;
+                document.getElementById('permanent-delete-modal').style.display = 'flex';
+            }
+
+            async function confirmPermanentDelete() {
+                if (!itemToDeleteId) return;
+
                 const { error } = await supabase
                     .from('achados')
-                    .update({
-                        devolvido: true,
-                        devolvido_por: currentSession.user.email,
-                        data_devolucao: new Date().toISOString()
-                    })
-                    .eq('id', id);
+                    .delete()
+                    .eq('id', itemToDeleteId);
 
                 if (error) {
-                    console.error('Erro ao deletar o item:', error);
-                    showMessage('Erro ao deletar o item.', true);
+                    console.error('Erro ao excluir permanentemente o item:', error);
+                    showMessage('Erro ao excluir permanentemente o item.', true);
                 } else {
-                    showMessage('Item deletado com sucesso!');
+                    showMessage('Item excluído permanentemente com sucesso!');
                     fetchAchados(currentSession);
-                    checkAndPurgeHistory();
                 }
+
+                document.getElementById('permanent-delete-modal').style.display = 'none';
+                itemToDeleteId = null;
             }
 
 
