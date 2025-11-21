@@ -60,7 +60,7 @@
             gap: 1rem;
             margin-top: 1.5rem;
         }
-        
+
         /* Estilos da barra de rolagem para navegadores baseados em WebKit */
         .custom-scrollbar::-webkit-scrollbar {
             width: 60px;
@@ -133,7 +133,7 @@
 
         <!-- Mensagens de Erro ou Sucesso -->
         <div id="message" class="mt-4 text-center text-sm font-medium" style="display: none;"></div>
-        
+
         <!-- Alternador entre login e cadastro, e botão de recuperação de senha -->
         <div class="mt-6 text-center text-sm space-y-2">
             <button id="toggle-auth" class="text-blue-400 hover:text-blue-300 transition duration-200 focus:outline-none">Ainda não tem uma conta? Cadastre-se</button>
@@ -189,7 +189,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
                     </svg>
                 </button>
-                 
+
                 <!-- Barra de pesquisa movida para a barra superior -->
                 <div class="mt-2 sm:mt-0 w-full sm:w-auto flex-grow flex items-center relative">
                     <input type="text" id="historico-search-input" placeholder="Pesquisar..." class="w-full px-4 py-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200">
@@ -201,7 +201,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="fixed top-[6rem] left-4 right-4 bottom-4 bg-gray-800 rounded-xl shadow-lg p-8 overflow-y-auto custom-scrollbar">
             <div id="historico-list" class="space-y-4">
                 <!-- Lista de itens devolvidos será renderizada aqui -->
@@ -214,13 +214,13 @@
     <div id="liberacao-page" class="hidden w-full h-screen">
         <!-- Barra de navegação fixa no topo -->
         <div class="fixed top-0 left-0 w-full bg-gray-800 p-4 shadow-lg z-50 flex flex-wrap justify-start items-center space-x-4 space-y-2 sm:space-y-0">
-            
+
              <button id="sign-out-liberacao" class="py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200">Sair</button>
-            
+
             <button id="btn-historico" class="py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gray-500 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition duration-200">Histórico</button>
-            
+
             <button id="btn-add-item" class="py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition duration-200">Adicionar</button>
-            
+
             <!-- Barra de pesquisa movida para a barra superior -->
             <div class="mt-2 sm:mt-0 w-full sm:w-auto flex-grow flex items-center relative">
                 <input type="text" id="search-input" placeholder="Pesquisar..." class="w-full px-4 py-2 bg-gray-700 text-gray-100 border border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200">
@@ -231,17 +231,17 @@
                 </button>
             </div>
         </div>
-        
+
         <!-- Formulário de Adicionar/Editar Item -->
         <form id="add-item-form" class="fixed inset-0 hidden items-center justify-center z-[50] bg-black bg-opacity-50">
             <div class="w-full max-w-lg bg-gray-700 p-6 rounded-lg shadow-md mt-16 space-y-4 max-h-[80vh] overflow-y-auto">
                 <h3 id="form-subtitle" class="text-lg font-bold text-gray-100">Adicionar Item</h3>
-                
+
                 <div>
                     <label for="descricao" class="block text-sm font-medium text-gray-300">Descrição do Objeto</label>
                     <textarea id="descricao" name="descricao" rows="3" required class="mt-1 block w-full px-4 py-2 bg-gray-600 text-gray-100 border border-gray-500 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200"></textarea>
                 </div>
-                
+
                 <div>
                     <label for="local_encontrado" class="block text-sm font-medium text-gray-300">Local Onde Foi Encontrado</label>
                     <input type="text" id="local_encontrado" name="local_encontrado" required class="mt-1 block w-full px-4 py-2 bg-gray-600 text-gray-100 border border-gray-500 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200">
@@ -251,7 +251,7 @@
                     <label for="data_encontrado" class="block text-sm font-medium text-gray-300">Data em que foi Encontrado</label>
                     <input type="text" id="data_encontrado" name="data_encontrado" placeholder="DD/MM/AAAA" maxlength="10" class="mt-1 block w-full px-4 py-2 bg-gray-600 text-gray-100 border border-gray-500 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200">
                 </div>
-                
+
                  <div>
                     <label for="hora_encontrado" class="block text-sm font-medium text-gray-300">Hora em que foi Encontrado</label>
                     <input type="text" id="hora_encontrado" name="hora_encontrado" placeholder="HH:mm" maxlength="5" class="mt-1 block w-full px-4 py-2 bg-gray-600 text-gray-100 border border-gray-500 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200">
@@ -261,7 +261,7 @@
                     <label for="observacao" class="block text-sm font-medium text-gray-300">Observação</label>
                     <textarea id="observacao" name="observacao" rows="3" class="mt-1 block w-full px-4 py-2 bg-gray-600 text-gray-100 border border-gray-500 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-200"></textarea>
                 </div>
-                
+
                 <div>
                      <label for="foto" class="block text-sm font-medium text-gray-300">Anexar Foto</label>
                      <div class="flex items-center space-x-4 mt-1">
@@ -277,14 +277,14 @@
                 <div id="photo-thumbnail-container" class="mt-4 hidden">
                     <img id="photo-thumbnail" src="#" alt="Miniatura da foto" class="w-full h-auto object-cover rounded-lg border border-gray-600">
                 </div>
-                
+
                 <div class="flex space-x-4">
                     <button type="submit" id="form-submit-btn" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200">Salvar Item</button>
                     <button type="button" id="form-cancel-btn" class="w-full flex justify-center py-2 px-4 border border-gray-500 rounded-lg shadow-sm text-sm font-medium text-gray-200 bg-gray-600 hover:bg-gray-500 transition duration-200">Cancelar</button>
                 </div>
             </div>
         </form>
-        
+
         <div class="fixed top-[6rem] left-4 right-4 bottom-4 bg-gray-800 rounded-xl shadow-lg p-8 overflow-y-auto custom-scrollbar">
             <div id="liberacoes-list" class="space-y-4">
                 <!-- Lista de itens encontrados será renderizada aqui -->
@@ -355,7 +355,7 @@
         // **IMPORTANTE**: Substitua 'VOTSUF_URL' e 'VOTSUF_ANON_KEY' pelas suas credenciais do projeto Supabase.
         const supabaseUrl = 'https://rztrygjczjqeqqldiqxa.supabase.co'
         const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6dHJ5Z2pjempxZXFxbGRpcXhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwNDgyMzIsImV4cCI6MjA3MzYyNDIzMn0.s7QiJWo6SPZRmN1bW1vPyhEis0xO1voNh0GFWPrTLtU'
-        
+
         // Inicializa o cliente Supabase
         const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
 
@@ -391,13 +391,13 @@
             const fotoInput = document.getElementById('foto');
             const addItemForm = document.getElementById('add-item-form');
             const btnUpload = document.getElementById('btn-upload'); // Novo botão
-            
+
             // Novos elementos para os ícones de olho
             const togglePasswordBtn = document.getElementById('toggle-password');
             const toggleConfirmPasswordBtn = document.getElementById('toggle-confirm-password');
             const toggleNewPasswordBtn = document.getElementById('toggle-new-password');
             const toggleConfirmRecoveryBtn = document.getElementById('toggle-confirm-recovery');
-            
+
             // Campos de senha
             const passwordInput = document.getElementById('password');
             const confirmPasswordSignupInput = document.getElementById('confirm-password-signup');
@@ -424,16 +424,16 @@
             const filterDateInput = document.getElementById('filter-date');
             const searchInput = document.getElementById('search-input');
             const clearSearchBtn = document.getElementById('clear-search');
-            
+
             // Novos elementos de filtro para histórico
             const historicoBtnFilterAll = document.getElementById('historico-btn-filter-all');
             const historicoFilterDateInput = document.getElementById('historico-filter-date');
             const historicoSearchInput = document.getElementById('historico-search-input');
             const historicoClearSearchBtn = document.getElementById('historico-search-input');
-            
+
             // Botão de sair da barra de navegação
             const signOutLiberacaoBtn = document.getElementById('sign-out-liberacao');
-            
+
             // Botão para voltar da página de histórico para a de liberação
             const backToLiberacaoBtn = document.getElementById('back-to-liberacao');
 
@@ -501,7 +501,7 @@
                 messageElem.style.display = text ? 'block' : 'none';
                 messageElem.className = `mt-4 text-center text-sm font-medium ${isError ? 'text-red-500' : 'text-green-500'}`;
             }
-            
+
             // Função para exibir mensagens de validação
             function showValidationMessage(text) {
                 modalMessage.textContent = text || 'Por favor, preencha todos os campos obrigatórios.';
@@ -517,14 +517,14 @@
                 e.preventDefault();
                 const email = document.getElementById('email').value;
                 const password = passwordInput.value;
-                
+
                 if (isSigningUp) {
                     const confirmPassword = confirmPasswordSignupInput.value;
                     if (password !== confirmPassword) {
                         showMessage('As senhas não coincidem. Tente novamente.', true);
                         return;
                     }
-                    
+
                     // Lógica de cadastro
                     const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.href } });
                     if (error) {
@@ -544,7 +544,7 @@
                     }
                 }
             });
-            
+
             // Lógica de redefinição de senha
             forgotPasswordBtn.addEventListener('click', async () => {
                 const email = document.getElementById('email').value;
@@ -560,7 +560,7 @@
                     showMessage('Verifique seu e-mail para o link de redefinição de senha.');
                 }
             });
-            
+
             // Lógica para lidar com o formulário de recuperação de senha
             passwordRecoveryForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -595,7 +595,7 @@
                 buttonElem.addEventListener('click', () => {
                     const type = inputElem.type === 'password' ? 'text' : 'password';
                     inputElem.type = type;
-                    
+
                     // Altera o ícone do olho
                     if (type === 'password') {
                         buttonElem.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -681,7 +681,7 @@
             // Lógica para lidar com o envio do formulário de item
             addItemForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                
+
                 const localEncontrado = localEncontradoInput.value;
                 const dataEncontrado = dataEncontradoInput.value;
                 const horaEncontrado = horaEncontradoInput.value;
@@ -693,7 +693,7 @@
                 if (capturedImageFile) {
                     file = capturedImageFile;
                 }
-                
+
                 if (!localEncontrado || !dataEncontrado || !horaEncontrado || !descricao) {
                      showValidationMessage('Por favor, preencha o local, a data, o horário e a descrição do item.');
                      return;
@@ -719,8 +719,8 @@
                      showValidationMessage('A data e hora de encontro do item não podem estar no futuro.');
                      return;
                 }
-                
-                const payload = { 
+
+                const payload = {
                     descricao: descricao,
                     local_encontrado: localEncontrado,
                     data_encontrado: parsedDate.toISOString(),
@@ -776,7 +776,7 @@
                 } else {
                     // Adiciona criador_nome apenas para novos itens
                     payload.criador_nome = currentSession.user.email;
-                    
+
                     const { data, error } = await supabase
                         .from('achados')
                         .insert([payload]);
@@ -799,7 +799,7 @@
                     }
                 }
             });
-            
+
             async function editItem(id) {
                 const { data, error } = await supabase
                     .from('achados')
@@ -813,7 +813,7 @@
                 }
 
                 itemToEdit = data;
-                
+
                 descricaoInput.value = itemToEdit.descricao || '';
                 localEncontradoInput.value = itemToEdit.local_encontrado || '';
                 dataEncontradoInput.value = itemToEdit.data_encontrado ? moment(itemToEdit.data_encontrado).format('DD/MM/YYYY') : '';
@@ -823,7 +823,7 @@
                 formSubtitle.textContent = 'Editar Item';
                 formSubmitBtn.textContent = 'Salvar Edição';
                 addItemForm.style.display = 'flex';
-                
+
                 if (itemToEdit.anexo_url) {
                     photoThumbnail.src = itemToEdit.anexo_url;
                     photoThumbnailContainer.classList.remove('hidden');
@@ -837,17 +837,17 @@
                 itemToDeleteId = id;
                 devolverModal.style.display = 'flex';
             }
-            
+
             async function deleteItem(id) {
                 const { error } = await supabase
                     .from('achados')
-                    .update({ 
-                        devolvido: true, 
+                    .update({
+                        devolvido: true,
                         devolvido_por: currentSession.user.email,
                         data_devolucao: new Date().toISOString()
                     })
                     .eq('id', id);
-                
+
                 if (error) {
                     console.error('Erro ao deletar o item:', error);
                     showMessage('Erro ao deletar o item.', true);
@@ -872,14 +872,14 @@
 
                 const { error } = await supabase
                     .from('achados')
-                    .update({ 
-                        devolvido: true, 
+                    .update({
+                        devolvido: true,
                         devolvido_por: currentSession.user.email,
                         quem_retirou: quemRetirou,
                         data_devolucao: new Date().toISOString()
                     })
                     .eq('id', itemToDeleteId);
-                
+
                 if (error) {
                     console.error('Erro ao devolver o item:', error);
                     showMessage('Erro ao devolver o item.', true);
@@ -925,10 +925,10 @@
 
                 if (data && data.length > 0) {
                     const oldItems = data.filter(item => item.data_devolucao && moment(item.data_devolucao).isBefore(threeMonthsAgo));
-                    
+
                     if (oldItems.length > 0) {
                         const itemIdsToPurge = oldItems.map(item => item.id);
-                        
+
                         const { error: deleteError } = await supabase
                             .from('achados')
                             .delete()
@@ -942,9 +942,9 @@
                     }
                 }
             }
-            
+
             async function fetchHistorico(session, searchTerm = null) {
-                
+
                 let query = supabase
                     .from('achados')
                     .select('*')
@@ -958,7 +958,7 @@
                     historicoList.innerHTML = `<p class="text-center text-red-500">Erro ao carregar o histórico.</p>`;
                     return;
                 }
-                
+
                 let filteredData = data;
                 if (searchTerm && searchTerm.trim() !== '') {
                     const normalizedSearchTerm = normalizeText(searchTerm);
@@ -1014,7 +1014,7 @@
                             <p class="text-sm text-gray-400">Observação: <strong class="text-lg text-gray-100">${item.observacao || 'N/A'}</strong></p>
                             <p class="text-sm text-red-400 mt-2">${statusText}</p>
                         `;
-                        
+
                         if (fotoElement) {
                            itemCard.appendChild(fotoElement);
                         }
@@ -1026,9 +1026,9 @@
                     historicoList.innerHTML = `<p class="text-center text-gray-500">Nenhum item no histórico.</p>`;
                 }
             }
-            
+
             async function fetchAchados(session, searchTerm = null) {
-                
+
                 let query = supabase
                     .from('achados')
                     .select('*')
@@ -1055,13 +1055,13 @@
                 if (filteredData && filteredData.length > 0) {
                     filteredData.forEach(item => {
                         const cardClasses = 'bg-gray-700 p-4 rounded-lg shadow-lg transition-all duration-300 hover:bg-gray-600 flex flex-col sm:flex-row items-center border border-gray-600';
-                        
+
                         const itemCard = document.createElement('div');
                         itemCard.className = cardClasses;
-                        
+
                         const actionsContainer = document.createElement('div');
                         actionsContainer.className = 'flex items-center space-x-2 mt-4 sm:mt-0 sm:ml-auto';
-                        
+
                         // Verifica se o usuário atual é o criador do item para exibir o botão de editar
                         if (currentSession && item.criador_nome === currentSession.user.email) {
                             const editButton = document.createElement('button');
@@ -1069,21 +1069,21 @@
                             editButton.textContent = 'Editar';
                             editButton.onclick = () => editItem(item.id);
                             actionsContainer.appendChild(editButton);
+
+                            const deleteButton = document.createElement('button');
+                            deleteButton.className = 'py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200';
+                            deleteButton.textContent = 'Deletar';
+                            deleteButton.onclick = () => deleteItem(item.id);
+                            actionsContainer.appendChild(deleteButton);
                         }
 
                         const devolverButton = document.createElement('button');
                         devolverButton.className = 'py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-200';
                         devolverButton.textContent = 'Devolução';
                         devolverButton.onclick = () => devolverItem(item.id);
-
-                        const deleteButton = document.createElement('button');
-                        deleteButton.className = 'py-2 px-4 rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200';
-                        deleteButton.textContent = 'Deletar';
-                        deleteButton.onclick = () => deleteItem(item.id);
-
                         actionsContainer.appendChild(devolverButton);
-                        actionsContainer.appendChild(deleteButton);
-                        
+
+
                         const dataCriacaoFormatada = moment(item.created_at).format('DD/MM/YYYY HH:mm');
                         const dataEncontradoFormatada = item.data_encontrado ? moment(item.data_encontrado).format('DD/MM/YYYY HH:mm') : 'N/A';
 
@@ -1113,7 +1113,7 @@
                             <p class="text-sm text-gray-400 mt-2">Adicionado ao sistema por: <strong class="text-lg text-gray-100">${item.criador_nome}</strong></p>
                             <p class="text-sm text-gray-400">Data de adição no sistema: ${dataCriacaoFormatada}</p>
                         `;
-                        
+
                         if (fotoElement) {
                           itemCard.appendChild(fotoElement);
                         }
@@ -1138,7 +1138,7 @@
                     fetchAchados(currentSession, '');
                 }
             });
-            
+
             searchInput.addEventListener('input', (event) => {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(() => {
@@ -1147,7 +1147,7 @@
                     }
                 }, 500);
             });
-            
+
             historicoClearSearchBtn.addEventListener('click', () => {
                 historicoSearchInput.value = '';
                 if (currentSession) {
@@ -1216,7 +1216,7 @@
                     if (passwordRecoveryContainer.style.display === 'flex') {
                         return;
                     }
-                    
+
                     authContainer.style.display = 'none';
                     liberacaoPage.style.display = 'flex';
                     historicoPage.style.display = 'none';
@@ -1226,7 +1226,7 @@
 
                     fetchAchados(currentSession);
                     checkAndPurgeHistory();
-                    
+
                 } else {
                     authContainer.style.display = 'block';
                     liberacaoPage.style.display = 'none';
@@ -1236,7 +1236,7 @@
                 }
                 showMessage('');
             });
-            
+
             document.getElementById('back-to-liberacao').addEventListener('click', async () => {
                  historicoPage.style.display = 'none';
                  liberacaoPage.style.display = 'flex';
@@ -1269,7 +1269,7 @@
                 cameraCanvas.width = videoElement.videoWidth;
                 cameraCanvas.height = videoElement.videoHeight;
                 context.drawImage(videoElement, 0, 0, cameraCanvas.width, cameraCanvas.height);
-                
+
                 // Converte o canvas para um Blob e cria um "Arquivo" virtual
                 cameraCanvas.toBlob(blob => {
                     capturedImageFile = new File([blob], `camera_photo_${Date.now()}.png`, { type: 'image/png' });
@@ -1316,7 +1316,7 @@
                     }
 
                     input.value = newValue;
-                    
+
                     // Ajusta a posição do cursor
                     let newPos = start;
                     if (oldValue.length < newValue.length) {
@@ -1336,7 +1336,7 @@
                     if (newValue.length > 5) {
                         newValue = newValue.substring(0, 5);
                     }
-                    
+
                     input.value = newValue;
 
                     // Ajusta a posição do cursor
@@ -1353,4 +1353,3 @@
     </script>
 </body>
 </html>
-
