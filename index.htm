@@ -1017,6 +1017,12 @@
 
                         const dataDevolucaoFormatada = item.data_devolucao ? moment(item.data_devolucao).format('DD/MM/YYYY HH:mm') : 'N/A';
                         const dataEncontradoFormatada = item.data_encontrado ? moment(item.data_encontrado).format('DD/MM/YYYY HH:mm') : 'N/A';
+                        let encontradoHaHtml = '<p class="text-sm text-gray-400">Encontrado há: <strong class="text-gray-100 font-bold">N/A</strong></p>';
+                        if (item.data_encontrado) {
+                            const diffDias = Math.max(0, moment().diff(moment(item.data_encontrado), 'days'));
+                            const colorClass = diffDias >= 90 ? 'text-red-500' : 'text-green-500';
+                            encontradoHaHtml = `<p class="text-sm text-gray-400">Encontrado há: <strong class="${colorClass} font-bold">${diffDias} ${diffDias === 1 ? 'dia' : 'dias'}</strong></p>`;
+                        }
 
                         // Cria o elemento da foto se a URL existir
                         let fotoElement = null;
@@ -1050,6 +1056,7 @@
                             <p class="text-sm text-gray-400">Local Encontrado: <strong class="text-lg text-gray-100">${item.local_encontrado || 'N/A'}</strong></p>
                             <p class="text-sm text-gray-400 mt-2">Adicionado ao sistema por: <strong class="text-lg text-gray-100">${item.criador_nome}</strong></p>
                             <p class="text-sm text-gray-400">Data de adição no sistema: ${moment(item.created_at).format('DD/MM/YYYY HH:mm')}</p>
+                            ${encontradoHaHtml}
                             <p class="text-sm text-gray-400">Observação: <strong class="text-lg text-gray-100">${item.observacao || 'N/A'}</strong></p>
                             <p class="text-sm text-red-400 mt-2">${statusText}</p>
                         `;
@@ -1125,6 +1132,12 @@
 
                         const dataCriacaoFormatada = moment(item.created_at).format('DD/MM/YYYY HH:mm');
                         const dataEncontradoFormatada = item.data_encontrado ? moment(item.data_encontrado).format('DD/MM/YYYY HH:mm') : 'N/A';
+                        let encontradoHaHtml = '<p class="text-sm text-gray-400">Encontrado há: <strong class="text-gray-100 font-bold">N/A</strong></p>';
+                        if (item.data_encontrado) {
+                            const diffDias = Math.max(0, moment().diff(moment(item.data_encontrado), 'days'));
+                            const colorClass = diffDias >= 90 ? 'text-red-500' : 'text-green-500';
+                            encontradoHaHtml = `<p class="text-sm text-gray-400">Encontrado há: <strong class="${colorClass} font-bold">${diffDias} ${diffDias === 1 ? 'dia' : 'dias'}</strong></p>`;
+                        }
 
                         // Cria o elemento da foto se a URL existir
                         let fotoElement = null;
@@ -1151,6 +1164,7 @@
                             <p class="text-sm text-gray-400">Observação: <strong class="text-lg text-gray-100">${item.observacao || 'N/A'}</strong></p>
                             <p class="text-sm text-gray-400 mt-2">Adicionado ao sistema por: <strong class="text-lg text-gray-100">${item.criador_nome}</strong></p>
                             <p class="text-sm text-gray-400">Data de adição no sistema: ${dataCriacaoFormatada}</p>
+                            ${encontradoHaHtml}
                         `;
 
                         if (fotoElement) {
